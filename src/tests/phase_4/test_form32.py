@@ -1,7 +1,7 @@
 from time import sleep
 import unittest
 
-from selenium.webdriver.common.by import By
+from selenium.webdriver import Keys
 
 from src.common.browser import Browser
 from src.forms.phase_4.form32 import Form_32
@@ -16,64 +16,63 @@ class Form_32_Tests(unittest.TestCase):
         self.br.load_page(self.f.URL_DEBUG)
 
     def test_drzitel_reg(self):
+        """
+        Klasické odeslání s volbou Držitel, registrovaný přípravek
+        """
         f = self.f
-        br = self.br
 
-        f.find_and_click_radio(f.CSS_DRZITEL_RADIO)
-        f.find_and_click_radio(f.CSS_REGISTROVANE_RADIO)
-        f.find_and_click_button("Přidat léčivý přípravek", repeat_cnt=3)
-        f.find_and_click_button("Přidat šarži", index=0, repeat_cnt=2)
-        f.find_and_click_button("Přidat šarži", index=2, repeat_cnt=1)
+        f.set_radio_value(f.CSS_JE_DRZITEL_RADIO)
+        f.set_radio_value(f.CSS_REGISTROVANE_RADIO)
+        f.click_button_by_name("Přidat léčivý přípravek")
+        f.click_button_by_name("Přidat šarži", index=0)
 
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_datepicker_inputs()
         f.ra.randomize_text_inputs()
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        sleep(C.SECS_SHORT)
-        f.find_and_click_button("Odeslat")
+        sleep(C.TIME_SHORT)
+        f.click_button_by_name("Odeslat")
 
-        br.check_result()
-        self.assertIn("lp1_test_file.csv", br.page_source)
-        self.assertIn("lp2_test_file.csv", br.page_source)
-        self.assertIn("lp3_test_file.csv", br.page_source)
-        self.assertIn("lp4_test_file.csv", br.page_source)
+        f.check_result()
 
     def test_provozovatel_reg(self):
+        """
+        Klasické odeslání s volbou Provozovatel, registrovaný přípravek
+        """
         f = self.f
-        br = self.br
 
-        f.find_and_click_radio(f.CSS_PROVOZOVATEL_RADIO)
-        f.find_and_click_radio(f.CSS_REGISTROVANE_RADIO)
-        f.find_and_click_button("Přidat léčivý přípravek", repeat_cnt=1)
-        f.find_and_click_button("Přidat šarži", repeat_cnt=2)
+        f.set_radio_value(f.CSS_JE_PROVOZOVATEL_RADIO)
+        f.set_radio_value(f.CSS_REGISTROVANE_RADIO)
+        f.click_button_by_name("Přidat léčivý přípravek")
+        f.click_button_by_name("Přidat šarži", index=1)
 
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_datepicker_inputs()
         f.ra.randomize_text_inputs()
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        sleep(C.SECS_SHORT)
-        f.find_and_click_button("Odeslat")
+        sleep(C.TIME_SHORT)
+        f.click_button_by_name("Odeslat")
 
-        br.check_result()
-        self.assertIn("lp1_test_file.csv", br.page_source)
-        self.assertIn("lp2_test_file.csv", br.page_source)
+        f.check_result()
 
     def test_provozovatel_NEreg(self):
+        """
+        Klasické odeslání s volbou Provozovatel, neregistrovaný přípravek
+        """
         f = self.f
-        br = self.br
 
-        f.find_and_click_radio(f.CSS_PROVOZOVATEL_RADIO)
-        f.find_and_click_radio(f.CSS_NEREGISTROVANE_RADIO)
-        f.find_and_click_button("Přidat léčivý přípravek", repeat_cnt=2)
-        f.find_and_click_button("Přidat šarži", repeat_cnt=1)
+        f.set_radio_value(f.CSS_JE_PROVOZOVATEL_RADIO)
+        f.set_radio_value(f.CSS_NEREGISTROVANE_RADIO)
+        f.click_button_by_name("Přidat léčivý přípravek")
+        f.click_button_by_name("Přidat šarži", index=1)
 
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_datepicker_inputs()
         f.ra.randomize_text_inputs()
@@ -81,22 +80,20 @@ class Form_32_Tests(unittest.TestCase):
         f.ra.randomize_file_inputs()
 
         sleep(0.5)
-        f.find_and_click_button("Odeslat")
-
-        br.check_result()
-        self.assertIn("lp1_test_file.csv", br.page_source)
-        self.assertIn("lp2_test_file.csv", br.page_source)
-        self.assertIn("lp3_test_file.csv", br.page_source)
+        f.click_button_by_name("Odeslat")
+        f.check_result()
 
     def test_pacient_reg(self):
+        """
+        Klasické odeslání s volbou Pacient, registrovaný přípravek
+        """
         f = self.f
-        br = self.br
 
-        f.find_and_click_radio(f.CSS_PACIENT_RADIO)
-        f.find_and_click_button("Přidat léčivý přípravek", repeat_cnt=1)
-        f.find_and_click_button("Přidat šarži", index=1, repeat_cnt=2)
+        f.set_radio_value(f.CSS_JE_PACIENT_RADIO)
+        f.click_button_by_name("Přidat léčivý přípravek")
+        f.click_button_by_name("Přidat šarži")
 
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_datepicker_inputs()
         f.ra.randomize_text_inputs()
@@ -104,39 +101,84 @@ class Form_32_Tests(unittest.TestCase):
         f.ra.randomize_file_inputs()
 
         sleep(0.5)
-        f.find_and_click_button("Odeslat")
+        f.click_button_by_name("Odeslat")
+        f.check_result()
 
-        br.check_result()
-        self.assertIn("lp1_test_file.csv", br.page_source)
-        self.assertIn("lp2_test_file.csv", br.page_source)
-
-    def test_nevalidni_vyplneni(self):
-        pass
-
-    def test_hodne_opakovani(self):
-        pass
-
-    def test_captcha_nevalidni(self):
+    def test_nevalidni_email(self):
+        """
+        Pokus o odeslani formulare se spatne vypnenym emailem, nasledne opraveno a odeslano
+        """
         f = self.f
         br = self.br
 
-        br.load_page(f.URL)
-        sleep(2)
+        f.set_radio_value(f.CSS_JE_DRZITEL_RADIO)
 
-        self.assertIn("Opište text z obrázku", br.page_source)
-        for _ in range(0, 150):
-            br.dr.find_element(By.CSS_SELECTOR, "small").click()
+        f.write_to_textbox("invalid@mailcz", f.CSS_DRZITEL_KONTAKT_OSOBA_EMAIL)
+        f.ra.randomize_radio_inputs()
+        f.ra.randomize_checkbox_inputs()
+        f.ra.randomize_datepicker_inputs()
+        f.ra.randomize_text_inputs()
+        f.ra.randomize_select_inputs()
+        f.ra.randomize_file_inputs()
 
-        for _ in range(0, 5):
-            br.dr.find_element(By.XPATH, f.XPATH_CAPTCHA_INPUT).send_keys(500 * "X")
-            f.find_and_click_button("Ověřit")
+        sleep(1)
+        f.click_button_by_name("Odeslat")
+        self.assertIn("Email není ve správném formátu.", br.page_source)
+        f.write_to_textbox(20 * Keys.BACKSPACE, f.CSS_DRZITEL_KONTAKT_OSOBA_EMAIL, remember_value=False)
+        f.write_to_textbox("valid@mail.cz", f.CSS_DRZITEL_KONTAKT_OSOBA_EMAIL)
 
-        self.assertIn("Více než 5 neplatných pokusů. Čekejte:", br.page_source)
-        sleep(31)
-        self.assertNotIn("Více než 5 neplatných pokusů. Čekejte:", br.page_source)
-        self.assertIn("Opište text z obrázku", br.page_source)
+        sleep(0.5)
+        f.click_button_by_name("Odeslat")
+        f.check_result()
+
+    def test_max_opakovani_LP(self):
+        """
+        Test maximálního počtu Léčivých připravků
+        """
+        f = self.f
+        br = self.br
+
+        f.set_radio_value(f.CSS_JE_DRZITEL_RADIO)
+        f.click_button_by_name("Přidat léčivý přípravek", repeat_cnt=9)
+        self.assertNotIn("Přidat léčivý přípravek", br.page_source)
+
+        f.ra.randomize_radio_inputs()
+        f.ra.randomize_checkbox_inputs()
+        f.ra.randomize_datepicker_inputs()
+        f.ra.randomize_text_inputs()
+        f.ra.randomize_select_inputs()
+        f.ra.randomize_file_inputs()
+
+        sleep(0.5)
+        f.click_button_by_name("Odeslat")
+
+        f.check_result()
+
+    def test_max_opakovani_sarzi(self):
+        """
+        Test maximálního počtu šarží
+        """
+        f = self.f
+        br = self.br
+
+        f.set_radio_value(f.CSS_JE_PROVOZOVATEL_RADIO)
+        f.click_button_by_name("Přidat šarži", repeat_cnt=99)
+        self.assertNotIn("Přidat šarži", br.page_source)
+
+        f.ra.randomize_radio_inputs()
+        f.ra.randomize_checkbox_inputs()
+        f.ra.randomize_datepicker_inputs()
+        f.ra.randomize_text_inputs()
+        f.ra.randomize_select_inputs()
+        f.ra.randomize_file_inputs()
+
+        sleep(0.5)
+        f.click_button_by_name("Odeslat")
+
+        f.check_result()
 
     def tearDown(self):
+        self.br.print_console_errors()
         self.br.close_browser()
 
 

@@ -1,22 +1,22 @@
+import datetime as dt
 import re
-import time
-from random import randint
 import warnings
-
-from selenium.webdriver.common.by import By
+from random import randint
 from unittest import TestCase
 
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
-from src.common.functions import CommonElementActions
 from src.common.constants import Constants as C
-from src.common.functions import remember_entered_value
-
-import datetime as dt
+# todo importovat cely modul namisto funkci?
+# todo presice click pouze jako funkce?
+from src.common.functions import CommonElementActions
+from src.common.functions import log_attached_file
+from src.common.functions import log_value_of_element
 
 
 class Randomize:
-
+    # TODO PRIDAT KONTROLU JESTLI UZ NENI PRO INPUT ZAPAMATOVANA HODNOTA, PRO VSECHNY FUNKCE!
     def __init__(self, driver):
         self.dr = driver
         self.tc = TestCase()
@@ -49,7 +49,7 @@ class Randomize:
         return 1
 
     @staticmethod
-    def _rad_not_yet_selected(container):
+    def _has_active_radio(container):
         return container.find_elements(By.CSS_SELECTOR, "[type=radio]") \
                and not container.find_elements(By.CSS_SELECTOR, "[class*=active]")
 
@@ -62,31 +62,30 @@ class Randomize:
             element.clear()
         self.tc.fail("nenalezen validni format pro input")
 
-    def randomize_radio_buttons(self):
+    def randomize_radio_inputs(self):
         """
-        TODO
+        Najde vsechny kontejnery s radiobuttonama a nahodne nektery zvoli, pokud jeste zadny zvoleny neni
+        Takto iteruje dokud neni v kazdem kontejneru neco checked (muzou se postupne odkryvat dalsi sekce)
         """
 
-        iteration = 0
         while True:
-            iteration += 1
             need_next_iteration = False
             containers = self.dr.find_elements(By.CSS_SELECTOR, "[class=radios-container]")
-            for container in filter(self._rad_not_yet_selected, containers):
+            for container in filter(self._has_active_radio, containers):
                 rad_buttons = container.find_elements(By.CSS_SELECTOR, "[type=radio]")
                 if len(rad_buttons) == 1:
                     warnings.warn("v kontejneru je pouze jeden radiobutton - bude preskocen (resit explicitne)")
                     continue
                 rad_button = rad_buttons[randint(0, len(rad_buttons) - 1)]
                 self.cea.precise_click(rad_button)
-                remember_entered_value(rad_button)
+                log_value_of_element(rad_button)
                 need_next_iteration = True
             if not need_next_iteration:
                 break
 
     def randomize_checkbox_inputs(self):
         """
-        Najde vsechny checkboxy a mozna je zaskrtne
+        Najde vsechny checkboxy a nahodne je zaskrtne
         Zde se nepocita, ze by se po zaskrtnuti checkboxu zobrazily dalsi checkboxy nebo radbuttony
         """
         checkboxes = self.dr.find_elements(By.CSS_SELECTOR, "[type=checkbox]:not([checked])")
@@ -95,7 +94,7 @@ class Randomize:
                 continue
             if randint(0, 1) == 1:
                 self.cea.precise_click(checkbox)
-            remember_entered_value(checkbox)
+            log_value_of_element(checkbox)
 
     def randomize_datepicker_inputs(self):
         datepicker_containers = self.dr.find_elements(By.CSS_SELECTOR, ".react-datepicker__input-container")
@@ -105,7 +104,7 @@ class Randomize:
             self.dr.find_element(By.CSS_SELECTOR, ".react-datepicker__navigation--next").click()
             days_buttons = self.dr.find_elements(By.CSS_SELECTOR, ".react-datepicker__day")
             days_buttons[randint(0, len(days_buttons) - 1)].click()
-            remember_entered_value(datepicker)
+            log_value_of_element(datepicker)
 
     def randomize_text_inputs(self):
         text_inputs = self.dr.find_elements(By.CSS_SELECTOR, ".input-noprint:not([readonly]),"
@@ -114,7 +113,7 @@ class Randomize:
             if not text_input.get_attribute("value"):
                 suitable_format = self._find_suitable_format(text_input)
                 text_input.send_keys(self.generate_value(suitable_format))
-                remember_entered_value(text_input)
+                log_value_of_element(text_input)
 
     def randomize_select_inputs(self):
         select_inputs = self.dr.find_elements(By.CSS_SELECTOR, "select")
@@ -122,15 +121,27 @@ class Randomize:
             options = select_input.find_elements(By.CSS_SELECTOR, "option:not([disabled])")
             text_option = options[randint(0, len(options)-1)].text
             Select(select_input).select_by_visible_text(text_option)
-            # remember_entered_value(select_input)
-
-    def randomize_file_inputs(self):
-        file_inputs = self.dr.find_elements(By.CSS_SELECTOR, "input[type=file]:not([hidden])")
-        for file_input in file_inputs:
-            file_input.send_keys(C.TEST_FILE_PATH)
-            # remember_entered_value(file_input, explicit_assert_value=C.TEST_FILE_PATH)
+            log_value_of_element(select_input)
 
     def randomize_category_selection(self):
         self.dr.find_element(By.XPATH, "//button[text()='Vybrat kategorii']").click()
         choose_buttons = self.dr.find_elements(By.XPATH, "//button[text()='Zvolit kategorii ']")
         choose_buttons[randint(0, len(choose_buttons) - 1)].click()
+
+    def randomize_file_inputs(self):
+        """
+        Nalezne vsechny not hidden file inputy a do vsech vlozi minimalne 1 soubor
+        Na kazde dalsi vlozeny soubor je 1/2 sance, max dokud nedojdou testovaci soubory
+        Vlozene soubory se zapamatuji pro pozdejsi kontrolu
+        """
+        file_inputs = self.dr.find_elements(By.CSS_SELECTOR, "input[type=file]:not([hidden])")
+        for file_input in file_inputs:
+            i = 0
+            files_insert_string = f"{C.RESOURCES_PATH}\\{C.TEST_FILE_NAMES[i]}"
+            file_names = [C.TEST_FILE_NAMES[i]]
+            while randint(0, 1) and i < len(C.TEST_FILE_NAMES):
+                i += 1
+                files_insert_string += f"\n{C.RESOURCES_PATH}\\{C.TEST_FILE_NAMES[i]}"
+                file_names.append(C.TEST_FILE_NAMES[i])
+            file_input.send_keys(files_insert_string)
+            log_attached_file(file_input, file_names)

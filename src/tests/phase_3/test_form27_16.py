@@ -12,13 +12,13 @@ class Form_27_16_Tests(unittest.TestCase):
     def setUp(self):
         self.f = Form_27_16()
         self.f.load_page(self.f.URL)
-        cfg.entered_values = {}
+        cfg.element_values_log = {}
 
     def test_all_random(self):
         f = self.f
 
         f.ra.randomize_category_selection()
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_datepicker_inputs()
         f.ra.randomize_text_inputs()

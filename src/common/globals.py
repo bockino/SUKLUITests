@@ -1,23 +1,15 @@
-# Globalni promenna, do ktere se uklada "id elementu" : "vyplnena hodnota"
 
-# Todo musi byt globalni? Co property ve Form?
-entered_values = {}
+element_values_log = {}
+attached_files_log = {}
 
 '''
 HIGH PRIO:
-# TODO RELATIVNI CESTY K DRIVERU, PRILOZE
 # TODO HLEDAT PODLE NAME NE ID
-# TODO SPECIFIKOVAT TYPY PARAMETRY A NAVRATOVOU HODNOTU
-# TODO KAM DAT SUBMITTED ITEMS, MUSI BYT GLOBAL?
-# PRIDAT KONTROLU ERRORU Z KONZOLE
+# PRIDAT ASSERT ERRORU Z KONZOLE
 
 LOW PRIO:
-TODO PRIDAT KONTROLU SOUBORU
 TODO UKLADAT NAHODNY POCET SOUBORU
 TODO UKLADAT NAHODNE SOUBORY
 TODO DEFAULT NONE A NE PRAZDNY UVOZOVKY
-
-CO TESTY NETESTUJI:
-- ruzne pripony souboru o ruznem poctu a ruznych velikosti
 
 '''

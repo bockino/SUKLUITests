@@ -13,28 +13,28 @@ class Form_2_Tests(unittest.TestCase):
     def setUp(self):
         self.f = Form_2()
         self.f.load_page(self.f.URL)
-        cfg.entered_values = {}
+        cfg.element_values_log = {}
 
     def test_S_kodem_sukl(self):
         f = self.f
 
-        f.find_and_click_radio(f.CSS_CESTNE_PROHLASENI_CHECK)
-        f.find_and_click_radio(f.CSS_S_KODEM_RADIO)
-        f.find_and_click_radio(f.CSS_PLNA_MOC_PREDKLADA_RADIO)
-        f.find_and_write_textbox("1559", f.CSS_KOD_SUKL_TXT)
-        f.find_and_click_button("Načíst přípravek")
+        f.set_radio_value(f.CSS_CESTNE_PROHLASENI_CHECK)
+        f.set_radio_value(f.CSS_S_KODEM_RADIO)
+        f.set_radio_value(f.CSS_PLNA_MOC_PREDKLADA_RADIO)
+        f.write_to_textbox("1559", f.CSS_KOD_SUKL_TXT)
+        f.click_button_by_name("Načíst přípravek")
 
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_datepicker_inputs()
 
         f.ra.randomize_select_inputs()
         time.sleep(60)
-        f.find_and_click_button("Přidat stát")
+        f.click_button_by_name("Přidat stát")
         f.ra.randomize_text_inputs()
         f.ra.randomize_file_inputs()
 
-        f.find_and_click_button("Uložit formulář")
+        f.click_button_by_name("Uložit formulář")
         time.sleep(50000)
         # f.submit_form("Odeslat formulář")
 
@@ -43,7 +43,7 @@ class Form_2_Tests(unittest.TestCase):
 
         f.find_and_check_switch(f.CSS_CESTNE_PROHLASENI_CHECK)
 
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_text_inputs()
         f.ra.randomize_select_inputs()
@@ -52,9 +52,9 @@ class Form_2_Tests(unittest.TestCase):
 
     def test_experimental(self):
         f = self.f
-        f.ra.randomize_radio_buttons()
-        f.find_and_click_button("Uložit formulář")
-        f.find_and_click_button("Načíst formulář")
+        f.ra.randomize_radio_inputs()
+        f.click_button_by_name("Uložit formulář")
+        f.click_button_by_name("Načíst formulář")
         time.sleep(50)
 
     def tearDown(self):

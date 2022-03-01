@@ -1,97 +1,161 @@
-import time
 import unittest
+from time import sleep
 
-from src.common import globals as G
+from src.common.browser import Browser
+from src.common.constants import Constants as C
 from src.forms.phase_4.form33 import Form_33
 
 
 class Form_33_Tests(unittest.TestCase):
 
     def setUp(self):
-        self.f = Form_33()
-        self.f.load_page(self.f.URL)
-        G.entered_values = {}
+        self.br = Browser()
+        self.f = Form_33(self.br.dr)
+        self.br.load_page(self.f.URL_DEBUG)
+        # self.br.load_page(self.f.URL)
 
     def test_drzitel(self):
+        """
+        Klasické odeslání s volbou Držitel
+        """
         f = self.f
-        f.find_and_click_radio(f.CSS_DRZITEL_RADIO)
-        f.find_and_click_button("Přidat léčivý přípravek")
-        f.find_and_click_button("Přidat léčivý přípravek")
-        f.find_and_click_button("Přidat šarži", index=0, repeat_cnt=2)
-        f.find_and_click_button("Přidat šarži", index=1, repeat_cnt=2)
-        f.find_and_click_button("Přidat šarži", index=2)
-        f.find_and_click_button("Odebrat šarži", index=0)
 
-        f.find_and_write_textbox("444", f.CSS_KOD_SUKL_GENERAL.format("0"), explicit_assert_value="0000444")
-        f.find_and_click_button("Načíst přípravek", index=0)
-        time.sleep(1)
+        f.set_radio_value(f.CSS_DRZITEL_RADIO)
+        f.click_button_by_name("Přidat léčivý přípravek")
+        f.click_button_by_name("Přidat šarži")
+        f.click_button_by_name("Přidat šarži")
+        f.click_button_by_name("Odebrat šarži")
 
-        f.find_and_write_textbox("555", f.CSS_KOD_SUKL_GENERAL.format("1"), explicit_assert_value="0000555")
-        f.find_and_click_button("Načíst přípravek", index=1)
-        time.sleep(1)
+        f.load_lp("444", 0)
+        f.load_lp("555", 1)
 
-        f.find_and_write_textbox("666", f.CSS_KOD_SUKL_GENERAL.format("2"), explicit_assert_value="0000666")
-        f.find_and_click_button("Načíst přípravek", index=2)
-        time.sleep(1)
-
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_datepicker_inputs()
         f.ra.randomize_text_inputs()
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        f.submit_form("Odeslat")
+        sleep(C.TIME_SHORT)
+        f.click_button_by_name("Odeslat")
+
+        f.check_result()
 
     def test_provozovatel_reg(self):
         f = self.f
 
-        f.find_and_click_radio(f.CSS_PROVOZOVATEL_RADIO)
-        f.find_and_click_radio(f.CSS_REGISTROVANE)
-        f.find_and_write_textbox("111", f.CSS_KOD_SUKL_GENERAL.format("0"), explicit_assert_value="0000111")
-        f.find_and_click_button("Načíst přípravek")
-        time.sleep(1)
+        f.set_radio_value(f.CSS_PROVOZOVATEL_RADIO)
+        f.set_radio_value(f.CSS_REGISTROVANE)
+        f.load_lp("111", 0)
 
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_datepicker_inputs()
         f.ra.randomize_text_inputs()
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        f.submit_form("Odeslat")
+        sleep(C.TIME_SHORT)
+        f.click_button_by_name("Odeslat")
+
+        f.check_result()
 
     def test_provozovatel_NEreg(self):
         f = self.f
 
-        f.find_and_click_radio(f.CSS_PROVOZOVATEL_RADIO)
-        f.find_and_click_radio(f.CSS_NEREGISTROVANE)
+        f.set_radio_value(f.CSS_PROVOZOVATEL_RADIO)
+        f.set_radio_value(f.CSS_NEREGISTROVANE)
 
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_datepicker_inputs()
         f.ra.randomize_text_inputs()
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        f.submit_form("Odeslat")
+        sleep(C.TIME_SHORT)
+        f.click_button_by_name("Odeslat")
+
+        f.check_result()
 
     def test_pacient_reg(self):
         f = self.f
 
-        f.find_and_click_radio(f.CSS_PACIENT_RADIO)
+        f.set_radio_value(f.CSS_PACIENT_RADIO)
 
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_datepicker_inputs()
         f.ra.randomize_text_inputs()
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        f.submit_form("Odeslat")
+        sleep(C.TIME_SHORT)
+        f.click_button_by_name("Odeslat")
+        f.check_result()
+
+    # TODO ultimate test decorator
+    def test_max_opakovani_LP(self):
+        """
+        Test maximálního počtu Léčivých přípravků
+        """
+        f = self.f
+        br = self.br
+
+        f.set_radio_value(f.CSS_DRZITEL_RADIO)
+        f.click_button_by_name("Přidat léčivý přípravek", repeat_cnt=9)
+        self.assertNotIn("Přidat léčivý přípravek", br.page_source)
+
+        f.load_lp("111", 0)
+        f.load_lp("222", 1)
+        f.load_lp("333", 2)
+        f.load_lp("444", 3)
+        f.load_lp("555", 4)
+        f.load_lp("666", 5)
+        f.load_lp("777", 6)
+        f.load_lp("888", 7)
+        f.load_lp("999", 8)
+        f.load_lp("0001234", 9)
+
+        f.ra.randomize_radio_inputs()
+        f.ra.randomize_checkbox_inputs()
+        f.ra.randomize_datepicker_inputs()
+        f.ra.randomize_text_inputs()
+        f.ra.randomize_select_inputs()
+        f.ra.randomize_file_inputs()
+
+        sleep(0.5)
+        f.click_button_by_name("Odeslat")
+
+        f.check_result()
+
+    def test_max_opakovani_sarzi(self):
+        """
+        Test maximálního počtu Šarží
+        """
+        f = self.f
+        br = self.br
+
+        f.set_radio_value(f.CSS_DRZITEL_RADIO)
+        f.load_lp("111", 0)
+        f.click_button_by_name("Přidat šarži", repeat_cnt=19)
+        self.assertNotIn("Přidat šarži", br.page_source)
+
+        f.ra.randomize_radio_inputs()
+        f.ra.randomize_checkbox_inputs()
+        f.ra.randomize_datepicker_inputs()
+        f.ra.randomize_text_inputs()
+        f.ra.randomize_select_inputs()
+        f.ra.randomize_file_inputs()
+
+        sleep(0.5)
+        f.click_button_by_name("Odeslat")
+
+        f.check_result()
 
     def tearDown(self):
-        self.f.dr.close()
+        self.br.print_console_errors()
+        self.br.close_browser()
 
 
 if __name__ == '__main__':

@@ -1,3 +1,4 @@
+import re
 import sys
 
 from selenium.webdriver.common.action_chains import ActionChains
@@ -21,13 +22,22 @@ def precise_click_func(driver, element):
     # .reset_actions() ?
 
 
-def remember_entered_value(element, explicit_assert_value=None):
+def input_names_to_regex():
+    pass
+
+
+def log_attached_file(element, file_names):
+    element_name, _ = element.get_attribute("name").split("_____")
+    G.attached_files_log[element_name] = file_names
+    print(f"zapamatovane prilohy pro {element_name} : {G.attached_files_log[element_name]}")
+
+
+def log_value_of_element(element, explicit_assert_value=None):
     """
     Vycte a ulozi "name" a "value" z objektu elementu pro pozdejsi asserty
     Pokud uz je ulozena hodnota elementu, aktualizuje se (v pripade ze po random vyplneni
     nasleduje explicitni zadani hodnoty)
     """
-
     is_checkable = False
     is_checked = None
 
@@ -35,7 +45,7 @@ def remember_entered_value(element, explicit_assert_value=None):
         is_checkable = True
         is_checked = bool(element.get_attribute("checked"))
 
-    element_id, _ = element.get_attribute("id").split("_____")
+    element_id = re.sub("_+\d+", "", element.get_attribute("id"))
     if not element_id:
         sys.exit(f"nenalezen attribut 'id' elementu {element}")
 
@@ -43,13 +53,12 @@ def remember_entered_value(element, explicit_assert_value=None):
         element_value = explicit_assert_value
     else:
         element_value = element.get_attribute("value")
-        if not element_value:
+        if element_value is None:
             sys.exit(f"nenalezen attribut 'value' elementu {element}")
 
-    G.entered_values[element] = {
-        "id": element_id,
-        "value": element_value,
+    G.element_values_log[element_id] = {
+        "entered_value": element_value,
         "is_checkable": is_checkable,
         "is_checked": is_checked
     }
-    print(G.entered_values[element])
+    print(f"zapamatovane hodnoty pro {element_id} : {G.element_values_log[element_id]}")

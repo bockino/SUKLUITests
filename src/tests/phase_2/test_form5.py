@@ -23,7 +23,7 @@ class Form_5_Tests(unittest.TestCase):
         f.add_section_max("TODO")
         f.add_section_max("TODO")
 
-        f.ra.randomize_radio_buttons()
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_text_inputs()
         f.ra.randomize_select_inputs()

@@ -1,22 +1,22 @@
-
-class Settings:
-    # SETTINGS:
-    RUN_HEADLESS = False
-    # BROWSER = "chrome"
-    BROWSER = "chrome"
-    # BROWSER = "opera"
-    DRIVER_WAIT = 0.1
+"""
+TODO LIST
+- co z kazde subclass volat funkci baseclass a pouze predat argumenty specificke pro kazdy subform?
+- paralelni beh testu!!!
+- vypsat pole nepovinnych poli, aby randomizeru mohl nevyplnit pole, presto si zalogovat hodnotu elementu
+"""
 
 
 class Constants:
+    RUN_HEADLESS = False
 
-    SECS_SHORT = 2
-    SECS_MIDDLE = 5
-    SECS_LONG = 10
+    TIME_TINY = 0.1
+    TIME_SHORT = 2
+    TIME_MIDDLE = 5
+    TIME_LONG = 10
 
     DATA_TYPES_EXAMPLES = {
         "string": "f'~@#$%^&*_",
-        "number": "3",
+        "number": "123",
         "year": "1995",
         "phone": "+420 123456789",
         "mail": "tomas.bocek@qcm.cz",
@@ -26,12 +26,24 @@ class Constants:
 
     # FILE_PATH = r"source_code\resources\testovaci_soubor_1.csv"
     SOURCE_FOLDER = r"C:\Users\bocek\GIT_repositories\SUKLUITests\src"
-    TEST_FILE_PATH = f"{SOURCE_FOLDER}\\resources\\test_file.csv"
+    RESOURCES_PATH = f"{SOURCE_FOLDER}\\resources"
+    TEST_FILE_NAMES = [
+        "test_file_1.csv",
+        "test_file_2.csv",
+        "test_file_3.csv",
+        "test_file_4.csv",
+        "test_file_5.csv",
+        "test_file_6.csv",
+        "test_file_7.csv",
+        "test_file_8.csv",
+        "test_file_9.csv",
+        "test_file_10.csv"
+    ]
     RESULT_FOLDER = f"{SOURCE_FOLDER}\\output"
     DOWNLOADS_FOLDER_PATH = f"{SOURCE_FOLDER}\\resources\\downloads"
 
-    SAVED_FORM_URL_BASE = "https://e2.dev.eforms.sukl.cz/submission/"
     # /// DEV
+    SAVED_FORM_URL_BASE = "https://e2.dev.eforms.sukl.cz/submission/"
     FORM_02 = "https://e2.dev.eforms.sukl.cz/form/zadost-o-stanoveni-maximalni-ceny"
     FORM_09 = "https://e2.dev.eforms.sukl.cz/form/zadost-o-kvalifikaci-do-uhradove-souteze"
     FORM_10 = "https://e2.dev.eforms.sukl.cz/form/zadost-o-provedeni-zkracene-revize-systemu-uhrad"
@@ -49,6 +61,7 @@ class Constants:
     FORM_08 = "https://e2.dev.eforms.sukl.cz/form/zadost-o-zruseni-maximalni-ceny"
     FORM_16 = "https://e2.dev.eforms.sukl.cz/form/hlaseni-nps-ukonceni?prev=kUQFOXzCNNtMJLt3nRNrgWbJjFOyUBmp"
     FORM_19 = "https://e2.dev.eforms.sukl.cz/form/hlaseni-nps-uvodni"
+    FORM_20 = "https://e2.dev.eforms.sukl.cz/form/zadost-o-souhlas-s-dovozem-leciveho-pripravku-ze-treti-zeme"
     FORM_21 = "https://e2.dev.eforms.sukl.cz/form/specificky-lecebny-program"
     FORM_24 = "https://e2.dev.eforms.sukl.cz/form/zadost-o-vypracovani-odborneho-stanoviska"
     FORM_27_01 = "https://e2.dev.eforms.sukl.cz/form/platby-nahrady-vydaju-zdravotnicke-prostredky"
@@ -72,6 +85,7 @@ class Constants:
     FORM_34 = "https://e2.dev.eforms.sukl.cz/form/zadost-o-umozneni-uvedeni-cizojazycne-sarze-leciveho-pripravku-do-obehu"
 
     # /// TEST
+    # SAVED_FORM_URL_BASE = "https://tformulare.sukl.cz/submission/"
     # FORM_02 = "https://tformulare.sukl.cz/form/zadost-o-stanoveni-maximalni-ceny"
     # FORM_09 = "https://tformulare.sukl.cz/form/zadost-o-kvalifikaci-do-uhradove-souteze"
     # FORM_10 = "https://tformulare.sukl.cz/form/zadost-o-provedeni-zkracene-revize-systemu-uhrad"
@@ -89,6 +103,7 @@ class Constants:
     # FORM_08 = "https://tformulare.sukl.cz/form/zadost-o-zruseni-maximalni-ceny"
     # FORM_16 = "https://tformulare.sukl.cz/form/hlaseni-nps-ukonceni?prev=kUQFOXzCNNtMJLt3nRNrgWbJjFOyUBmp"
     # FORM_19 = "https://tformulare.sukl.cz/form/hlaseni-nps-uvodni"
+    # FORM_20 = "https://tformulare.sukl.cz/form/zadost-o-souhlas-s-dovozem-leciveho-pripravku-ze-treti-zeme"
     # FORM_21 = "https://tformulare.sukl.cz/form/specificky-lecebny-program"
     # FORM_24 = "https://tformulare.sukl.cz/form/zadost-o-vypracovani-odborneho-stanoviska"
     # FORM_27_01 = "https://tformulare.sukl.cz/form/platby-nahrady-vydaju-zdravotnicke-prostredky"
@@ -109,3 +124,4 @@ class Constants:
     # FORM_27_16 = "https://tformulare.sukl.cz/form/platby-pokuty"
     # FORM_32 = "https://tformulare.sukl.cz/form/hlaseni-podezreni-na-vyskyt-padelku-lp"
     # FORM_33 = "https://tformulare.sukl.cz/form/hlaseni-podezreni-na-zavadu-lp"
+    # FORM_34 = "https://tformulare.sukl.cz/form/zadost-o-umozneni-uvedeni-cizojazycne-sarze-leciveho-pripravku-do-obehu"

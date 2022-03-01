@@ -1,40 +1,92 @@
-
 import unittest
+from time import sleep
 
-from HtmlTestRunner import HTMLTestRunner
-
-from src.common.constants import Constants as Constants as C
-from src import Constants as Cfg
+from src.common.browser import Browser
 from src.forms.phase_1.form13 import Form_13
 
 
 class Form_13_Tests(unittest.TestCase):
 
-    def setUpClass(self):
-        self.f = Form_13()
-
     def setUp(self):
-        self.f.load_page(self.f.URL)
-        cfg.entered_values = {}
+        self.br = Browser()
+        self.f = Form_13(self.br.dr)
+        self.br.load_page(self.f.URL_DEBUG)
+        # self.br.load_page(self.f.URL)
 
-    def tet_todo_test_name(self):
+    def test_vydej_cr(self):
         f = self.f
-        
-        # EXAMPLE 
-        f._cea.check_element("TODO")
-        f._cea.check_element("TODO")
-        f.add_section_max("TODO")
-        f.add_section_max("TODO")
 
-        f.ra.randomize_radio_buttons()
+        f.set_checkbox_value(f.CSS_ZASILKOVY_VYDEJ_CR)
+        f.set_checkbox_value(f.CSS_ZASILKOVY_VYDEJ_ZAHRANICI, set_checked=False)
+        f.click_button_by_name("Přidat osobu", repeat_cnt=20)
+        f.click_button_by_name("Odebrat osobu", repeat_cnt=20)
+
+        f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
         f.ra.randomize_text_inputs()
+        f.ra.randomize_datepicker_inputs()
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
-        f.submit_form("Odeslat formulář")
-        
+
+        sleep(0.5)
+        f.click_button_by_name("Odeslat")
+        f.check_result()
+
+    def test_vydej_zahranici(self):
+        f = self.f
+
+        f.set_checkbox_value(f.CSS_ZASILKOVY_VYDEJ_ZAHRANICI)
+        f.set_checkbox_value(f.CSS_ZASILKOVY_VYDEJ_CR, set_checked=False)
+
+        f.ra.randomize_radio_inputs()
+        f.ra.randomize_checkbox_inputs()
+        f.ra.randomize_text_inputs()
+        f.ra.randomize_datepicker_inputs()
+        f.ra.randomize_select_inputs()
+        f.ra.randomize_file_inputs()
+
+        sleep(0.5)
+        f.click_button_by_name("Odeslat")
+        f.check_result()
+
+    def test_vydej_cr_i_zahranici(self):
+        f = self.f
+
+        f.set_checkbox_value(f.CSS_ZASILKOVY_VYDEJ_CR)
+        f.set_checkbox_value(f.CSS_ZASILKOVY_VYDEJ_ZAHRANICI)
+
+        f.ra.randomize_radio_inputs()
+        f.ra.randomize_checkbox_inputs()
+        f.ra.randomize_text_inputs()
+        f.ra.randomize_datepicker_inputs()
+        f.ra.randomize_select_inputs()
+        f.ra.randomize_file_inputs()
+
+        sleep(0.5)
+        f.click_button_by_name("Odeslat")
+        f.check_result()
+
+    def test_hodne_opakovani(self):
+        f = self.f
+
+        f.set_checkbox_value(f.CSS_ZASILKOVY_VYDEJ_ZAHRANICI)
+        f.click_button_by_name("Přidat osobu", repeat_cnt=20)
+
+        f.ra.randomize_radio_inputs()
+        f.ra.randomize_checkbox_inputs()
+        f.ra.randomize_text_inputs()
+        f.ra.randomize_datepicker_inputs()
+        f.ra.randomize_select_inputs()
+        f.ra.randomize_file_inputs()
+
+        sleep(0.5)
+        f.click_button_by_name("Odeslat")
+        f.check_result()
+
     def tearDown(self):
-        self.f.dr.close()
+        self.br.print_console_errors()
+        self.br.close_browser()
+
 
 if __name__ == '__main__':
-    unittest.main(testRunner=HTMLTestRunner(output=C.RESULT_FOLDER))
+    unittest.main()
