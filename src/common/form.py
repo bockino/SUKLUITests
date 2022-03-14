@@ -9,13 +9,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
 from src.common import globals as G
-from src.common.constants import Constants as C
+from src.common.constants import Constants
 from src.common.functions import CommonElementActions
 from src.common.functions import log_value_of_element
 from src.common.randomize import Randomize
 
 
 class Form:
+    # Elementy spolecne pro vsechny formulare
     XPATH_BERU_NA_VEDOMI = "/html/body/div[2]/div[3]/div/div/button"
 
     def __init__(self, driver, naming_rules):
@@ -25,6 +26,7 @@ class Form:
         self._naming_rules = naming_rules
         self._cea = CommonElementActions(self.dr)
         self._tc = TestCase()
+        self.const = Constants()
 
         self.clear_element_values_log()
         self.clear_attached_files_log()
@@ -132,8 +134,7 @@ class Form:
             return (
                     log_["method"] == "Network.responseReceived" and
                     "json" in log_["params"]["response"]["mimeType"] and
-                    log_["params"]["response"]["url"] == "https://server.dev.eforms.qcm.cz/api/submissions"
-                    # todo a co test instance? "https://server.dev.eforms.qcm.cz/api/submissions"
+                    log_["params"]["response"]["url"] == self.const.instance_url + "api/submissions"
             )
         public_id = ''
         logs_raw = self.dr.get_log("performance")
@@ -144,7 +145,7 @@ class Form:
             public_id = (json.loads(body_str["body"]))["publicId"]
 
         if public_id:
-            self.dr.get(C.SAVED_FORM_URL_BASE + public_id)
+            self.dr.get(self.const.SAVED_FORM_URL_BASE + public_id)
         else:
             exit("asdfasdfasdfasdfasdfasdfasfddasf")
 
@@ -166,7 +167,7 @@ class Form:
             # - protoze pouzivam id^= kvuli odfiltrovani nahodnych cisel na konci name/id
             elements = self.dr.find_elements(By.CSS_SELECTOR, selector)
             if len(elements) > 1:
-                print("warning: nalezeno vice elementu, kontrola preskocena")
+                print("\nwarning: nalezeno vice elementu, kontrola preskocena")
                 continue
             element = elements[0]
 
@@ -178,7 +179,7 @@ class Form:
             if element_is_checkable:
                 print("; assert stavu checked/unchecked", end='')
                 self._tc.assertEqual(bool(element.get_attribute("checked")), element_is_checked,
-                                     f"nesouhlasi stav checked/unchecked elementu {element_id}")
+                                     f"nesouhlasi {element_id}")
 
 
 

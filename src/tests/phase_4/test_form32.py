@@ -13,7 +13,7 @@ class Form_32_Tests(unittest.TestCase):
     def setUp(self):
         self.br = Browser()
         self.f = Form_32(self.br.dr)
-        self.br.load_page(self.f.URL_DEBUG)
+        self.br.load_page(self.f.url_debug)
 
     def test_drzitel_reg(self):
         """

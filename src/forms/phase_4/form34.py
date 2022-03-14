@@ -8,7 +8,7 @@ from src.common.functions import log_value_of_element
 
 
 class Form_34(Form):
-    URL = C.FORM_34
+    URL = C().FORM_34
     URL_DEBUG = URL + "#debug"
 
     CSS_UDAJE_PRAVDIVE = "[id^='/udajeJsouPravdive']"
