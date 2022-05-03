@@ -5,7 +5,7 @@ from selenium.webdriver import Keys
 
 from src.common.browser import Browser
 from src.forms.phase_4.form32 import Form_32
-from src.common.constants import Constants as C
+from src.common.constants import Constants
 
 
 class Form_32_Tests(unittest.TestCase):
@@ -33,7 +33,7 @@ class Form_32_Tests(unittest.TestCase):
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        sleep(C.TIME_SHORT)
+        sleep(ConstantsTIME_SHORT)
         f.click_button_by_name("Odeslat")
 
         f.check_result()
@@ -56,7 +56,7 @@ class Form_32_Tests(unittest.TestCase):
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        sleep(C.TIME_SHORT)
+        sleep(ConstantsTIME_SHORT)
         f.click_button_by_name("Odeslat")
 
         f.check_result()

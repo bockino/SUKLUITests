@@ -3,14 +3,11 @@ from time import sleep
 from selenium.webdriver.common.by import By
 
 from src.common.form import Form
-from src.common.constants import Constants as C
 from src.common.functions import log_value_of_element
+from src.common.urls import URLs
 
 
 class Form_34(Form):
-    URL = C().FORM_34
-    URL_DEBUG = URL + "#debug"
-
     CSS_UDAJE_PRAVDIVE = "[id^='/udajeJsouPravdive']"
     CSS_JE_DRZITEL = "[id^='/zadatelJeDrzitel-ano']"
     CSS_NENI_DRZITEL = "[id^='/zadatelJeDrzitel-ne']"
@@ -45,7 +42,9 @@ class Form_34(Form):
     ]
 
     def __init__(self, driver):
-        self.dr = driver
+        self.url = URLs().form_34
+        self.url_debug = self.url + "#debug"
+
         file_naming_rules = {
             # regex pro name attribut file inputu : prefix pro nazev souboru s placeholderem pro index
             r"\/lecivePripravky\/\d+\/informaceOPripravku\/prilohy": "rozdil_",
@@ -71,10 +70,3 @@ class Form_34(Form):
         for css_ro_input in self.CSS_READ_ONLY_INPUTS:
             ro_input = self.dr.find_element(By.CSS_SELECTOR, css_ro_input.format(index))
             log_value_of_element(ro_input)
-
-    def sign_and_send(self):
-        sleep(0.5)
-        self.click_button_by_name("Elektronicky podepsat formulář")
-        sleep(0.5)
-        self.click_button_by_name("Odeslat podepsaný formulář")
-

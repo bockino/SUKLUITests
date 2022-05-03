@@ -1,7 +1,7 @@
 default_form = '''
 import time
 
-from source_code.common.constants import Constants as Constants as C
+from source_code.common.constants import Constantsonstants
 from source_code.common.form import Form
 
 class Form_{}(Form):
@@ -20,8 +20,8 @@ import unittest
 
 from HtmlTestRunner import HTMLTestRunner
 
-from source_code.common.constants import Constants as Constants as C
-from source_code import Constants as Cfg
+from source_code.common.constants import Constantsonstants
+from source_code import Constantsfg
 from source_code.forms.phase_TODO.form{} import Form_{}
 
 
@@ -58,7 +58,7 @@ class Form_{}_Tests(unittest.TestCase):
         self.f.dr.close()
 
 if __name__ == '__main__':
-    unittest.main(testRunner=HTMLTestRunner(output=C.RESULT_FOLDER))
+    unittest.main(testRunner=HTMLTestRunner(output=ConstantsRESULT_FOLDER))
 '''
 
 

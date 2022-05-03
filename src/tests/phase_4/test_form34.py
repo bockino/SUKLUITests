@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 
 from src.common.browser import Browser
 from src.forms.phase_4.form34 import Form_34
-from src.common.constants import Constants as C
+from src.common.constants import Constants
 from src.common.functions import log_value_of_element
 
 
@@ -17,13 +17,12 @@ class Form_34_Tests(unittest.TestCase):
     def setUp(self):
         self.br = Browser()
         self.f = Form_34(self.br.dr)
-        self.br.load_page(self.f.URL_DEBUG)
-        # self.br.load_page(self.f.URL)
+        self.br.load_page(self.f.url_debug)
 
     def test_zadatel_JE_drzitel(self):
         """
         Test s volbou Drzitel
-        LP 2900 s registracni procedurou `NAR` (zobrazeni dalsich inputu)
+        LP 113 s registracni procedurou `NAR` (zobrazeni dalsich inputu)
         """
         f = self.f
         br = self.br
@@ -32,11 +31,12 @@ class Form_34_Tests(unittest.TestCase):
         f.set_radio_value(f.CSS_JE_DRZITEL)
 
         f.click_button_by_name("Přidat léčivý přípravek")
-        f.load_lp("2900", 0)
+        f.load_lp("113", 0)
         self.assertIn("Tento LP je registrován národním postupem", br.page_source)
-        f.load_lp("2901", 1)
+        f.load_lp("569", 1)
 
         # aby se nasledne zkontrovaly i automaticky nactene inputy
+        sleep(1)
         f.log_readonly_inputs(0)
         f.log_readonly_inputs(1)
 
@@ -46,7 +46,7 @@ class Form_34_Tests(unittest.TestCase):
         f.ra.randomize_text_inputs()
         # f.ra.randomize_select_inputs() <-- nelze zde pouzit
         # CSS_JAZYK_NA_OBALU - Specialni select, nelze vycist hodnotu,
-        # proto bude kontrolovana explicitne jako text na strance
+        # proto bude kontrolovana explicitne pouze jako text v html
         f.set_select_value("Francouzština", f.CSS_JAZYK_NA_OBALU.format(0), log_value=False)
         f.set_select_value("Němčina", f.CSS_JAZYK_NA_OBALU.format(1), log_value=False)
         f.set_select_value("Futuna", f.CSS_DRZITEL_STAT.format(0), log_value=True)
@@ -57,7 +57,7 @@ class Form_34_Tests(unittest.TestCase):
         f.clear_attached_files_log()
         f.ra.randomize_file_inputs()
 
-        f.sign_and_send()
+        f.sign_and_send_form()
         f.check_result()
 
         # Alespon takto lze select zkontrolovat
@@ -67,7 +67,7 @@ class Form_34_Tests(unittest.TestCase):
     def test_zadatel_NEdrzitel_pravicka(self):
         """
         Test s volbou Drzitel
-        LP bez registracni procedury NAR
+        LP 569 bez registracni procedury NAR
         """
         f = self.f
         br = self.br
@@ -76,7 +76,7 @@ class Form_34_Tests(unittest.TestCase):
         f.set_radio_value(f.CSS_NENI_DRZITEL)
         f.set_radio_value(f.CSS_JE_PRAVICKA)
 
-        f.load_lp("3000", 0)
+        f.load_lp("569", 0)
         self.assertNotIn("Tento LP je registrován národním postupem", br.page_source)
 
         # aby se nasledne zkontrovaly i automaticky nactene inputy
@@ -94,7 +94,7 @@ class Form_34_Tests(unittest.TestCase):
         f.clear_attached_files_log()
         f.ra.randomize_file_inputs()
 
-        f.sign_and_send()
+        f.sign_and_send_form()
         f.check_result()
 
         self.assertIn("Francouzština", br.page_source)
@@ -110,7 +110,7 @@ class Form_34_Tests(unittest.TestCase):
         f.set_radio_value(f.CSS_NENI_DRZITEL)
         f.set_radio_value(f.CSS_JE_FYZICKA)
 
-        f.load_lp("2500", 0)
+        f.load_lp("569", 0)
 
         f.log_readonly_inputs(0)
 
@@ -128,7 +128,7 @@ class Form_34_Tests(unittest.TestCase):
         f.clear_attached_files_log()
         f.ra.randomize_file_inputs()
 
-        f.sign_and_send()
+        f.sign_and_send_form()
         f.check_result()
 
         self.assertIn("Slovenština", br.page_source)
@@ -145,10 +145,21 @@ class Form_34_Tests(unittest.TestCase):
         f.load_lp(500 * "!@#")
         self.assertIn("Zadaný přípravek neexistuje", br.page_source)
 
+    def test_LP_nesplnuje_pozadavky_sarze(self):
+        """
+        Test načtení LP, který nesplňuje požadavky na cizojazyčnou šarži
+        """
+        f = self.f
+        br = self.br
+
+        f.load_lp("456")
+        self.assertIn("Přípravek nesplňuje požadavky na cizojazyčnou šarži.", br.page_source)
+
     def test_max_opakovani_LP(self):
         """
         Test max. počtu opakování LP včetně odeslání
         """
+        self.skipTest("nutno zadat povolene LP")
         f = self.f
         br = self.br
 
@@ -183,7 +194,7 @@ class Form_34_Tests(unittest.TestCase):
         f.ra.randomize_file_inputs()
         f.clear_attached_files_log()
 
-        f.sign_and_send()
+        f.sign_and_send_form()
         f.check_result()
         self.assertIn("Španělština", br.page_source)
 
@@ -199,7 +210,7 @@ class Form_34_Tests(unittest.TestCase):
         sleep(0.5)
         f.click_button_by_name("Uložit formulář")
         sleep(0.5)
-        br.dr.refresh()
+        br.refresh_page()
         sleep(0.5)
         f.insert_file(br.last_downloaded_file_path, f.XPATH_LOAD_FORM_INPUT, locator_type=By.XPATH, log_value=False)
         sleep(0.5)

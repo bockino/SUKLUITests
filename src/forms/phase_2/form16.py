@@ -1,12 +1,12 @@
 
 import time
 
-from src.common.constants import Constants as Constants as C
+from src.common.constants import Constantsonstants
 from src.common.form import Form
-from src.common.constants import Constants as C
+from src.common.constants import Constants
 
 class Form_16(Form):
-    URL = C.FORM_16
+    URL = ConstantsFORM_16
 
     EXAMPLE1 = "[id^='TODO']"
     EXAMPLE2 = "[id^='TODO']"

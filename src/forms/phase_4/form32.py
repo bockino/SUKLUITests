@@ -1,7 +1,5 @@
-import time
-
 from src.common.form import Form
-from src.common.constants import Constants as C
+from src.common.urls import URLs
 
 
 class Form_32(Form):
@@ -17,6 +15,8 @@ class Form_32(Form):
     CSS_DRZITEL_KONTAKT_OSOBA_EMAIL = "[id^='/hlasitelDrzitel/kontaktniOsoba/email']"
 
     def __init__(self, driver):
+        self.url = URLs().form_32
+        self.url_debug = self.url + "#debug"
 
         file_naming_rules = {
             # regex pro name attribut file inputu : prefix pro nazev souboru s placeholderem pro index
@@ -24,5 +24,5 @@ class Form_32(Form):
         }
         super().__init__(driver, file_naming_rules)
 
-        self.url = self.const.FORM_32
+        self.url = self.urls.FORM_32
         self.url_debug = self.url + "#debug"

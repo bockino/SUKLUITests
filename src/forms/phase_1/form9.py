@@ -1,9 +1,9 @@
 from src.common.form import Form
-from src.common.constants import Constants as C
+from src.common.constants import Constants
 
 
 class Form_9(Form):
-    URL = C.FORM_09
+    URL = ConstantsFORM_09
 
     EXAMPLE1 = "[id^='TODO']"
     EXAMPLE2 = "[id^='TODO']"

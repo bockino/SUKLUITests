@@ -3,8 +3,8 @@ import unittest
 
 from HtmlTestRunner import HTMLTestRunner
 
-from src.common.constants import Constants as Constants as C
-from src import Constants as Cfg
+from src.common.constants import Constantsonstants
+from src import Constantsfg
 from src.forms.phase_2.form19 import Form_19
 
 
@@ -35,4 +35,4 @@ class Form_19_Tests(unittest.TestCase):
         self.f.dr.close()
 
 if __name__ == '__main__':
-    unittest.main(testRunner=HTMLTestRunner(output=C.RESULT_FOLDER))
+    unittest.main(testRunner=HTMLTestRunner(output=ConstantsRESULT_FOLDER))

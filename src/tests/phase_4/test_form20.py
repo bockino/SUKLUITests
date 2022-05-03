@@ -1,4 +1,3 @@
-import time
 import unittest
 from time import sleep
 
@@ -13,41 +12,54 @@ class Form_20_Tests(unittest.TestCase):
     def setUp(self):
         self.br = Browser()
         self.f = Form_20(self.br.dr)
-        self.br.load_page(self.f.URL_DEBUG)
-        # self.br.load_page(self.f.URL)
+        self.br.load_page(self.f.url_debug)
 
-    def test_asdf(self):
+    def test_distributor_dle_ic(self):
         """
         """
         f = self.f
-
-        f.write_to_textbox("25635964", f.CSS_ZADATEL_IC)
-        f.click_button_by_name("Načíst distributora podle IČ")
-        # f.set_checkbox_value(f.CSS_PREVZIT_ADRESU, set_checked=False)
-
-        # f.click_button_by_name("Přidat léčivou látku")
-
-        f.ra.randomize_radio_inputs()
-        f.ra.randomize_checkbox_inputs()
-        f.ra.randomize_datepicker_inputs()
-        f.ra.randomize_text_inputs()
-        f.ra.randomize_select_inputs()
-        f.ra.randomize_file_inputs()
-
-        sleep(5)
-        f.click_button_by_name("Elektronicky podepsat formulář")
-        sleep(0.5)
-        f.click_button_by_name("Odeslat podepsaný formulář")
-        f.check_result()
-
-    def test_nacteni_jsonu(self):
-        """
-        """
-        f = self.f
-
         f.write_to_textbox("25635964", f.CSS_ZADATEL_IC)
         f.click_button_by_name("Načíst distributora podle IČ")
         f.log_readonly_inputs()
+        f.set_checkbox_value(f.CSS_PREVZIT_ADRESU, set_checked=False)
+        f.ra.randomize_radio_inputs()
+        f.ra.randomize_checkbox_inputs()
+        f.ra.randomize_datepicker_inputs()
+        f.ra.randomize_text_inputs()
+        f.ra.randomize_select_inputs()
+        f.ra.randomize_file_inputs()
+
+        f.sign_and_send_form()
+        f.check_result()
+
+    def test_distributor_dle_nazvu(self):
+        """
+        """
+        f = self.f
+        f.write_to_textbox("25635964", f.CSS_ZADATEL_NAZEV)
+        f.click_button_by_name("Načíst distributora podle názvu")
+        f.log_readonly_inputs()
+        f.set_checkbox_value(f.CSS_PREVZIT_ADRESU, set_checked=True)
+        f.ra.randomize_radio_inputs()
+        f.ra.randomize_checkbox_inputs()
+        f.ra.randomize_datepicker_inputs()
+        f.ra.randomize_text_inputs()
+        f.ra.randomize_select_inputs()
+        f.ra.randomize_file_inputs()
+
+        f.sign_and_send_form()
+        f.check_result()
+
+    def test_nacist_formular_z_json(self):
+        """
+        """
+        f = self.f
+
+        f.write_to_textbox("25635964", f.CSS_ZADATEL_IC)
+        f.click_button_by_name("Načíst distributora podle IČ")
+        sleep(0.5)
+        f.log_readonly_inputs()
+        f.click_button_by_name("Přidat léčivou látku", repeat_cnt=2)
 
         f.ra.randomize_radio_inputs()
         f.ra.randomize_checkbox_inputs()
@@ -56,11 +68,11 @@ class Form_20_Tests(unittest.TestCase):
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        self._save_and_upload_json()
+        self._save_and_load_json()
         f.clear_attached_files_log()
         f.ra.randomize_file_inputs()
 
-        f.sign_and_send()
+        f.sign_and_send_form()
         f.check_result()
 
     def test_qwer(self):
@@ -72,7 +84,7 @@ class Form_20_Tests(unittest.TestCase):
     # ------------------------------------------------------------------------
     # pomocne funkce
 
-    def _save_and_upload_json(self):
+    def _save_and_load_json(self):
         f = self.f
         br = self.br
 

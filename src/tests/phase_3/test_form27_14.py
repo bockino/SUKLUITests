@@ -3,9 +3,9 @@ import unittest
 from HtmlTestRunner import HTMLTestRunner
 from selenium.webdriver.common.by import By
 
-from src import Constants as Cfg
+from src import Constantsfg
 from src.forms.phase_3.form27_14 import Form_27_14
-from src.common.constants import Constants as Constants as C
+from src.common.constants import Constantsonstants
 
 
 class Form_27_14_Tests(unittest.TestCase):
@@ -35,5 +35,5 @@ class Form_27_14_Tests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main(testRunner=HTMLTestRunner(output=C.RESULT_FOLDER))
+    unittest.main(testRunner=HTMLTestRunner(output=ConstantsRESULT_FOLDER))
     

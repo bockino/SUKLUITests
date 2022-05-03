@@ -7,7 +7,7 @@ from unittest import TestCase
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
-from src.common.constants import Constants as C
+from src.common.constants import Constants
 # todo importovat cely modul namisto funkci?
 # todo presice click pouze jako funkce?
 from src.common.functions import CommonElementActions
@@ -36,9 +36,9 @@ class Randomize:
         if data_type == "phone":
             return f"+420 {randint(100000000, 1000000000)}"
         if data_type == "mail":
-            return C.DATA_TYPES_EXAMPLES[data_type]
+            return Constants.DATA_TYPES_EXAMPLES[data_type]
         if data_type == "iban":
-            return C.DATA_TYPES_EXAMPLES[data_type]
+            return Constants.DATA_TYPES_EXAMPLES[data_type]
 
     @staticmethod
     def _is_valid_format(element):
@@ -54,8 +54,8 @@ class Randomize:
                and not container.find_elements(By.CSS_SELECTOR, "[class*=active]")
 
     def _find_suitable_format(self, element):
-        for data_type in C.DATA_TYPES_EXAMPLES:
-            element.send_keys(C.DATA_TYPES_EXAMPLES[data_type])
+        for data_type in Constants.DATA_TYPES_EXAMPLES:
+            element.send_keys(Constants.DATA_TYPES_EXAMPLES[data_type])
             if self._is_valid_format(element):
                 element.clear()
                 return data_type
@@ -137,11 +137,12 @@ class Randomize:
         file_inputs = self.dr.find_elements(By.CSS_SELECTOR, "input[type=file]:not([hidden])")
         for file_input in file_inputs:
             i = 0
-            files_insert_string = f"{C.RESOURCES_PATH}\\{C.TEST_FILE_NAMES[i]}"
-            file_names = [C.TEST_FILE_NAMES[i]]
-            while randint(0, 1) and i < len(C.TEST_FILE_NAMES):
+            files_insert_string = f"{Constants.RESOURCES_PATH}\\{Constants.TEST_FILE_NAMES[i]}"
+            file_names = [Constants.TEST_FILE_NAMES[i]]
+            while randint(0, 1) and i < len(Constants.TEST_FILE_NAMES):
+                print(f"i {i}, len pole souboru {len(Constants.TEST_FILE_NAMES)}")
                 i += 1
-                files_insert_string += f"\n{C.RESOURCES_PATH}\\{C.TEST_FILE_NAMES[i]}"
-                file_names.append(C.TEST_FILE_NAMES[i])
+                files_insert_string += f"\n{Constants.RESOURCES_PATH}\\{Constants.TEST_FILE_NAMES[i]}"
+                file_names.append(Constants.TEST_FILE_NAMES[i])
             file_input.send_keys(files_insert_string)
             log_attached_file(file_input, file_names)

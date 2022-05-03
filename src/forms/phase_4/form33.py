@@ -1,13 +1,10 @@
 from time import sleep
 
 from src.common.form import Form
-from src.common.constants import Constants as C
+from src.common.urls import URLs
 
 
 class Form_33(Form):
-    URL = C.FORM_33
-    URL_DEBUG = URL + "#debug"
-
     CSS_DRZITEL_RADIO = "[id^='/hlaseniPodava-drzitel-rozhodnuti-o-registraci']"
     CSS_PROVOZOVATEL_RADIO = "[id^='/hlaseniPodava-provozovatel']"
     CSS_PACIENT_RADIO = "[id^='/hlaseniPodava-pacient-nebo-jina-osoba']"
@@ -17,6 +14,8 @@ class Form_33(Form):
     CSS_KOD_SUKL_GENERAL = "[id^='/zavadaInfo/lecivo/{}/lecivyPripravek/suklKod']"
 
     def __init__(self, driver):
+        self.url = URLs().form_33
+        self.url_debug = self.url + "#debug"
 
         file_naming_rules = {
             # regex pro name attribut file inputu : prefix pro nazev souboru s placeholderem pro index

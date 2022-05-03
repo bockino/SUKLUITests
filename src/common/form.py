@@ -1,15 +1,15 @@
 import json
 import re
 import sys
-import time
 from unittest import TestCase
+from time import sleep
 
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
-from src.common import globals as G
-from src.common.constants import Constants
+from src.common import globals
+from src.common.urls import URLs
 from src.common.functions import CommonElementActions
 from src.common.functions import log_value_of_element
 from src.common.randomize import Randomize
@@ -26,18 +26,20 @@ class Form:
         self._naming_rules = naming_rules
         self._cea = CommonElementActions(self.dr)
         self._tc = TestCase()
-        self.const = Constants()
+        self.urls = URLs()
+        # todo result ? 
+        # todo actions ? Obecne akce pro vsechny formulare
 
         self.clear_element_values_log()
         self.clear_attached_files_log()
 
     @staticmethod
     def clear_element_values_log():
-        G.element_values_log = {}
+        globals.element_values_log = {}
 
     @staticmethod
     def clear_attached_files_log():
-        G.attached_files_log = {}
+        globals.attached_files_log = {}
 
     def click_button_by_name(self, button_text, index=0, repeat_cnt=1):
         for _ in range(0, repeat_cnt):
@@ -61,8 +63,8 @@ class Form:
 
     def set_checkbox_value(self, locator_string, set_checked=True, locator_type=By.CSS_SELECTOR, index=0,
                            log_value=True):
-        # TODO predelato statni funkce po vzoru teto?
-        # todo a jeste pridat kontrolu poctu nalezenych vuci indexu pozadovaneho
+        # TODO predelato ostatni funkce po vzoru teto?
+        # TODO a jeste pridat kontrolu poctu nalezenych vuci indexu pozadovaneho
         switches = self.dr.find_elements(locator_type, locator_string)
         switch = switches[index]
         is_checked = bool(switch.get_attribute("checked"))
@@ -87,6 +89,15 @@ class Form:
         if log_value:
             log_value_of_element(select)
 
+    def sign_and_send_form(self):
+        sleep(0.5)
+        self.click_button_by_name("Elektronicky podepsat formulář")
+        self.send_form()
+
+    def send_form(self):
+        sleep(0.5)
+        self.click_button_by_name("Odeslat podepsaný formulář")
+
     def check_result(self):
         self._wait_form_sent()
         self._load_filled_form()
@@ -103,8 +114,8 @@ class Form:
 
     def _assert_attached_files(self):
         new_expected_names = []
-        for input_name in G.attached_files_log:
-            original_file_names = G.attached_files_log[input_name]
+        for input_name in globals.attached_files_log:
+            original_file_names = globals.attached_files_log[input_name]
             for original_file_name in original_file_names:
                 found_match = False
                 for pattern in self._naming_rules:
@@ -122,7 +133,7 @@ class Form:
                         new_expected_names.append(expected_file_name)
                         continue
                 if not found_match:
-                    # neni zadan prefix souboru - bude ocekavana a kontrolovan originalni nazev
+                    # neni zadan prefix souboru - bude ocekavana a kontrolovan puvodni nazev souboru
                     new_expected_names.append(original_file_name)
 
         print(f"\nassert ocekavanych nazvu souboru: {new_expected_names}")
@@ -134,29 +145,31 @@ class Form:
             return (
                     log_["method"] == "Network.responseReceived" and
                     "json" in log_["params"]["response"]["mimeType"] and
-                    log_["params"]["response"]["url"] == self.const.instance_url + "api/submissions"
+                    log_["params"]["response"]["url"] == self.urls.api_base_url
             )
+        print(self.urls.api_base_url + "api/submissions")
         public_id = ''
         logs_raw = self.dr.get_log("performance")
         logs = [json.loads(lr["message"])["message"] for lr in logs_raw]
+
         for log in filter(_log_filter, logs):
             request_id = log["params"]["requestId"]
             body_str = self.dr.execute_cdp_cmd("Network.getResponseBody", {"requestId": request_id})
             public_id = (json.loads(body_str["body"]))["publicId"]
 
         if public_id:
-            self.dr.get(self.const.SAVED_FORM_URL_BASE + public_id)
+            self.dr.get(self.urls.saved_form_url_base + public_id)
         else:
-            exit("asdfasdfasdfasdfasdfasdfasfddasf")
+            exit("Nepodarilo se vycist public id odeslaneho formulare!")
 
     def _assert_entered_values(self):
         """
         Porovna hodnoty v nactenem vyplnenem formulari s predchozimi vyplnenymi hodnotami
         """
-        for element_id in G.element_values_log.keys():
-            element_entered_value = G.element_values_log[element_id]['entered_value']
-            element_is_checkable = G.element_values_log[element_id]['is_checkable']
-            element_is_checked = G.element_values_log[element_id]['is_checked']
+        for element_id in globals.element_values_log.keys():
+            element_entered_value = globals.element_values_log[element_id]['entered_value']
+            element_is_checkable = globals.element_values_log[element_id]['is_checkable']
+            element_is_checked = globals.element_values_log[element_id]['is_checked']
 
             print(f"\nassert hodnoty inputu {element_id}", end='; ')
             selector = f'[id^="{element_id}"]'
@@ -167,7 +180,7 @@ class Form:
             # - protoze pouzivam id^= kvuli odfiltrovani nahodnych cisel na konci name/id
             elements = self.dr.find_elements(By.CSS_SELECTOR, selector)
             if len(elements) > 1:
-                print("\nwarning: nalezeno vice elementu, kontrola preskocena")
+                print("\nwarning: pod id/name bylo nalezeno vice elementu, kontrola preskocena")
                 continue
             element = elements[0]
 
@@ -178,8 +191,8 @@ class Form:
 
             if element_is_checkable:
                 print("; assert stavu checked/unchecked", end='')
-                self._tc.assertEqual(bool(element.get_attribute("checked")), element_is_checked,
-                                     f"nesouhlasi {element_id}")
-
-
-
+                self._tc.assertEqual(
+                    bool(element.get_attribute("checked")),
+                    element_is_checked,
+                    f"nesouhlasi {element_id}"
+                )

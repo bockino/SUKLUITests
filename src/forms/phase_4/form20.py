@@ -3,19 +3,18 @@ from time import sleep
 from selenium.webdriver.common.by import By
 
 from src.common.form import Form
-from src.common.constants import Constants as C
+from src.common.urls import URLs
 from src.common.functions import log_value_of_element
 
 
 class Form_20(Form):
-    URL = C.FORM_20
-    URL_DEBUG = URL + "#debug"
-
     CSS_ZADATEL_IC = "[id^='/distributor/ic']"
+    CSS_ZADATEL_NAZEV = "[id^='name='/distributor/nazev']"
+
     CSS_PREVZIT_ADRESU = "[id^='/distributor/prevzitAdresu']"
 
     # XPATH_ULOZIT_FORMULAR = "/html/body/div[1]/div/div[1]/div/form/div[5]/fieldset/div/div/div/div[2]/div/button"
-    XPATH_NACIST_FORMULAR = "/html/body/div/div/div[1]/div/form/div[3]/fieldset/div/div/div/div/div[2]/button"
+    XPATH_NACIST_FORMULAR = "/html/body/div/div/div[1]/div/form/div[3]/fieldset/div/div/div/div/div[2]/input"
 
     # # Read only inputy
     # CSS_ZADATEL_ULICE = "[id^='/distributor/adresa/ulice']"
@@ -29,10 +28,13 @@ class Form_20(Form):
         "[id^='/distributor/adresa/cisloPopisne']",
         "[id^='/distributor/adresa/cisloOrientacni']",
         "[id^='/distributor/adresa/psc']",
-        "[id^='/distributor/adresa/obec']"
+        "[id^='/distributor/adresa/obec']",
     ]
 
     def __init__(self, driver):
+        self.url = URLs().form_20
+        self.url_debug = self.url + "#debug"
+
         file_naming_rules = {
             # regex pro name attribut file inputu : prefix pro nazev souboru s placeholderem pro index
             r"\/souhrnUdaju": "smpc_",
@@ -41,12 +43,6 @@ class Form_20(Form):
             r"\/jineDokumenty": "jine_"
         }
         super().__init__(driver, file_naming_rules)
-
-    def sign_and_send(self):
-        sleep(0.5)
-        self.click_button_by_name("Elektronicky podepsat formulář")
-        sleep(0.5)
-        self.click_button_by_name("Odeslat podepsaný formulář")
 
     def log_readonly_inputs(self):
         for css_ro_input in self.CSS_READ_ONLY_INPUTS:

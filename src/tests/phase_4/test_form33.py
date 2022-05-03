@@ -2,7 +2,7 @@ import unittest
 from time import sleep
 
 from src.common.browser import Browser
-from src.common.constants import Constants as C
+from src.common.constants import Constants
 from src.forms.phase_4.form33 import Form_33
 
 
@@ -11,7 +11,7 @@ class Form_33_Tests(unittest.TestCase):
     def setUp(self):
         self.br = Browser()
         self.f = Form_33(self.br.dr)
-        self.br.load_page(self.f.URL_DEBUG)
+        self.br.load_page(self.f.url_debug)
         # self.br.load_page(self.f.URL)
 
     def test_drzitel(self):
@@ -36,7 +36,7 @@ class Form_33_Tests(unittest.TestCase):
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        sleep(C.TIME_SHORT)
+        sleep(Constants.TIME_SHORT)
         f.click_button_by_name("Odeslat")
 
         f.check_result()
@@ -55,7 +55,7 @@ class Form_33_Tests(unittest.TestCase):
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        sleep(C.TIME_SHORT)
+        sleep(ConstantsTIME_SHORT)
         f.click_button_by_name("Odeslat")
 
         f.check_result()
@@ -73,7 +73,7 @@ class Form_33_Tests(unittest.TestCase):
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        sleep(C.TIME_SHORT)
+        sleep(ConstantsTIME_SHORT)
         f.click_button_by_name("Odeslat")
 
         f.check_result()
@@ -90,7 +90,7 @@ class Form_33_Tests(unittest.TestCase):
         f.ra.randomize_select_inputs()
         f.ra.randomize_file_inputs()
 
-        sleep(C.TIME_SHORT)
+        sleep(ConstantsTIME_SHORT)
         f.click_button_by_name("Odeslat")
         f.check_result()
 

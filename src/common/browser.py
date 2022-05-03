@@ -1,10 +1,10 @@
 import glob
 import os
-import time
+from time import sleep
 
 from selenium.common.exceptions import InvalidArgumentException
 
-from src.common.constants import Constants as C
+from src.common.constants import Constants
 from src.common.driver_init import driver_inicialize
 
 
@@ -18,7 +18,7 @@ class Browser:
 
     def load_page(self, url):
         self.dr.get(url)
-        time.sleep(C.TIME_MIDDLE)
+        sleep(Constants.TIME_MIDDLE)
 
     @property
     def page_source(self):
@@ -28,10 +28,14 @@ class Browser:
         self.dr.close()
         self.dr.quit()
 
+    def refresh_page(self):
+        self.dr.refresh()
+        sleep(1)
+
     @property
     def last_downloaded_file_path(self):
         # TODO co kdyz je slozka prazdna?
-        newest_json = sorted(glob.glob(f"{C.DOWNLOADS_FOLDER_PATH}\\*.json"), key=os.path.getctime)[-1]
+        newest_json = sorted(glob.glob(f"{Constants.DOWNLOADS_FOLDER_PATH}\\*.json"), key=os.path.getctime)[-1]
         print(newest_json)
         return newest_json
 

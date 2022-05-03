@@ -1,9 +1,9 @@
-from src.common.constants import Constants as C
+from src.common.constants import Constants
 from src.common.form import Form
 
 
 class Form_13(Form):
-    URL = C.FORM_13
+    URL = ConstantsFORM_13
     URL_DEBUG = URL + "#debug"
 
     CSS_ZASILKOVY_VYDEJ_CR = "[id^='/zasilkovyVydej/zasilkovyVydejCr']"

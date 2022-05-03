@@ -3,8 +3,8 @@ import unittest
 
 import HtmlTestRunner
 
-from src.common.constants import Constants as Constants as C
-from src import Constants as Cfg
+from src.common.constants import Constantsonstants
+from src import Constantsfg
 from src.forms.phase_1.form2 import Form_2
 
 

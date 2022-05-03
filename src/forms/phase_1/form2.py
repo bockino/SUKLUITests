@@ -1,9 +1,9 @@
 from src.common.form import Form
-from src.common.constants import Constants as C
+from src.common.constants import Constants
 
 
 class Form_2(Form):
-    URL = C.FORM_02
+    URL = ConstantsFORM_02
 
     CSS_CESTNE_PROHLASENI_CHECK = "[id^='/prilohy/cestneProhlaseni/prohlasuji']"
     CSS_S_KODEM_RADIO = "[id^='/identifikacePripravku/isKod-withcode']"

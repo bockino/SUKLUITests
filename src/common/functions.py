@@ -2,7 +2,7 @@ import re
 import sys
 
 from selenium.webdriver.common.action_chains import ActionChains
-from src.common import globals as G
+from src.common import globals
 
 
 class CommonElementActions:
@@ -28,8 +28,8 @@ def input_names_to_regex():
 
 def log_attached_file(element, file_names):
     element_name, _ = element.get_attribute("name").split("_____")
-    G.attached_files_log[element_name] = file_names
-    print(f"zapamatovane prilohy pro {element_name} : {G.attached_files_log[element_name]}")
+    globals.attached_files_log[element_name] = file_names
+    print(f"zapamatovane prilohy pro {element_name} : {globals.attached_files_log[element_name]}")
 
 
 def log_value_of_element(element, explicit_assert_value=None):
@@ -56,9 +56,9 @@ def log_value_of_element(element, explicit_assert_value=None):
         if element_value is None:
             sys.exit(f"nenalezen attribut 'value' elementu {element}")
 
-    G.element_values_log[element_id] = {
+    globals.element_values_log[element_id] = {
         "entered_value": element_value,
         "is_checkable": is_checkable,
         "is_checked": is_checked
     }
-    print(f"zapamatovane hodnoty pro {element_id} : {G.element_values_log[element_id]}")
+    print(f"zapamatovane hodnoty pro {element_id} : {globals.element_values_log[element_id]}")
