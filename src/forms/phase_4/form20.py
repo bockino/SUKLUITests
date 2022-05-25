@@ -9,12 +9,13 @@ from src.common.functions import log_value_of_element
 
 class Form_20(Form):
     CSS_ZADATEL_IC = "[id^='/distributor/ic']"
-    CSS_ZADATEL_NAZEV = "[id^='name='/distributor/nazev']"
-
+    CSS_ZADATEL_NAZEV = "[id^='/distributor/nazev']"
+    XPATH_VYBERTE_DISTRIBUTORA = "//*[option='INVE Medical, s.r.o.']/."
     CSS_PREVZIT_ADRESU = "[id^='/distributor/prevzitAdresu']"
-
-    # XPATH_ULOZIT_FORMULAR = "/html/body/div[1]/div/div[1]/div/form/div[5]/fieldset/div/div/div/div[2]/div/button"
     XPATH_NACIST_FORMULAR = "/html/body/div/div/div[1]/div/form/div[3]/fieldset/div/div/div/div/div[2]/input"
+
+    # Selektory s placeholderem pro index
+    CSS_ZDRAVOTNICKE_ZARIZENI_NAZEV = "[id^='/zdravotnickeZarizeni/{}/zarizeni/nazev']"
 
     # # Read only inputy
     # CSS_ZADATEL_ULICE = "[id^='/distributor/adresa/ulice']"
@@ -23,13 +24,13 @@ class Form_20(Form):
     # CSS_ZADATEL_PSC = "[id^='/distributor/adresa/psc']"
     # CSS_ZADATEL_OBEC = "[id^='/distributor/adresa/obec']"
 
-    CSS_READ_ONLY_INPUTS = [
+    CSS_READ_ONLY_INPUTS = (
         "[id^='/distributor/adresa/ulice']",
         "[id^='/distributor/adresa/cisloPopisne']",
         "[id^='/distributor/adresa/cisloOrientacni']",
         "[id^='/distributor/adresa/psc']",
         "[id^='/distributor/adresa/obec']",
-    ]
+    )
 
     def __init__(self, driver):
         self.url = URLs().form_20

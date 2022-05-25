@@ -23,5 +23,5 @@ def driver_inicialize():
     service = Service(executable_path="chromedriver.exe")
 
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver.implicitly_wait(Constants.TIME_TINY)
+    driver.implicitly_wait(0.1)
     return driver

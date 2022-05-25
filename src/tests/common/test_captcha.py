@@ -12,7 +12,7 @@ class Form_32_Tests(unittest.TestCase):
     def setUp(self):
         self.br = Browser()
         self.f = Form_32(self.br.dr)
-        self.br.load_page(self.f.URL)
+        self.br.load_page(self.f.URL, self.f.form_title)
 
     def test_captcha_nevalidni(self):
         """
@@ -21,7 +21,7 @@ class Form_32_Tests(unittest.TestCase):
         """
         f = self.f
         br = self.br
-        br.load_page(f.URL)
+        br.load_page(f.URL, self.f.form_title)
 
         self.assertIn("Opište text z obrázku", br.page_source)
         for _ in range(0, 150):

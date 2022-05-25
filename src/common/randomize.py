@@ -36,9 +36,9 @@ class Randomize:
         if data_type == "phone":
             return f"+420 {randint(100000000, 1000000000)}"
         if data_type == "mail":
-            return Constants.DATA_TYPES_EXAMPLES[data_type]
+            return Constants.DATA_TYPES_PATTERNS[data_type]
         if data_type == "iban":
-            return Constants.DATA_TYPES_EXAMPLES[data_type]
+            return Constants.DATA_TYPES_PATTERNS[data_type]
 
     @staticmethod
     def _is_valid_format(element):
@@ -54,8 +54,8 @@ class Randomize:
                and not container.find_elements(By.CSS_SELECTOR, "[class*=active]")
 
     def _find_suitable_format(self, element):
-        for data_type in Constants.DATA_TYPES_EXAMPLES:
-            element.send_keys(Constants.DATA_TYPES_EXAMPLES[data_type])
+        for data_type in Constants.DATA_TYPES_PATTERNS:
+            element.send_keys(Constants.DATA_TYPES_PATTERNS[data_type])
             if self._is_valid_format(element):
                 element.clear()
                 return data_type
@@ -140,7 +140,7 @@ class Randomize:
             files_insert_string = f"{Constants.RESOURCES_PATH}\\{Constants.TEST_FILE_NAMES[i]}"
             file_names = [Constants.TEST_FILE_NAMES[i]]
             while randint(0, 1) and i < len(Constants.TEST_FILE_NAMES):
-                print(f"i {i}, len pole souboru {len(Constants.TEST_FILE_NAMES)}")
+                print(f"debug: index {i} z pole o velikosti {len(Constants.TEST_FILE_NAMES)}")
                 i += 1
                 files_insert_string += f"\n{Constants.RESOURCES_PATH}\\{Constants.TEST_FILE_NAMES[i]}"
                 file_names.append(Constants.TEST_FILE_NAMES[i])

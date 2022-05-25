@@ -17,7 +17,7 @@ class Form_34_Tests(unittest.TestCase):
     def setUp(self):
         self.br = Browser()
         self.f = Form_34(self.br.dr)
-        self.br.load_page(self.f.url_debug)
+        self.br.load_page(self.f.url_debug, self.f.form_title)
 
     def test_zadatel_JE_drzitel(self):
         """
@@ -205,13 +205,12 @@ class Form_34_Tests(unittest.TestCase):
         f = self.f
         br = self.br
 
-        sleep(2)
+        sleep(1)
         f.click_button_by_name("Stáhnout formulář v PDF")
-        sleep(0.5)
+        # sleep(0.5)
         f.click_button_by_name("Uložit formulář")
-        sleep(0.5)
-        br.refresh_page()
-        sleep(0.5)
+        # sleep(0.5)
+        br.refresh_page(wait_text="Státní ústav pro kontrolu léčiv")
         f.insert_file(br.last_downloaded_file_path, f.XPATH_LOAD_FORM_INPUT, locator_type=By.XPATH, log_value=False)
         sleep(0.5)
 

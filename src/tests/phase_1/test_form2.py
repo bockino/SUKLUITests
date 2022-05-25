@@ -12,7 +12,7 @@ class Form_2_Tests(unittest.TestCase):
 
     def setUp(self):
         self.f = Form_2()
-        self.f.load_page(self.f.URL)
+        self.f.load_page(self.f.URL, self.f.form_title)
         cfg.element_values_log = {}
 
     def test_S_kodem_sukl(self):
@@ -35,7 +35,6 @@ class Form_2_Tests(unittest.TestCase):
         f.ra.randomize_file_inputs()
 
         f.click_button_by_name("Uložit formulář")
-        time.sleep(50000)
         # f.submit_form("Odeslat formulář")
 
     def test_BEZ_kodu_sukl(self):

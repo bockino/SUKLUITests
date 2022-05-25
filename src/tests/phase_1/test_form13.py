@@ -10,7 +10,7 @@ class Form_13_Tests(unittest.TestCase):
     def setUp(self):
         self.br = Browser()
         self.f = Form_13(self.br.dr)
-        self.br.load_page(self.f.URL_DEBUG)
+        self.br.load_page(self.f.URL_DEBUG, self.f.form_title)
         # self.br.load_page(self.f.URL)
 
     def test_vydej_cr(self):

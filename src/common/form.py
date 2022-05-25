@@ -27,6 +27,7 @@ class Form:
         self._cea = CommonElementActions(self.dr)
         self._tc = TestCase()
         self.urls = URLs()
+        self.form_title = "Státní ústav pro kontrolu léčiv"
         # todo result ? 
         # todo actions ? Obecne akce pro vsechny formulare
 
